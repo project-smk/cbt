@@ -1072,10 +1072,19 @@
                         <button onclick="downloadTemplateGuruExcel()" class="bg-slate-50 hover:bg-slate-100 text-slate-700 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-slate-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap"><i class="fa-solid fa-file-lines"></i> Template</button>
                         <button onclick="document.getElementById('excel-guru-file-input').click()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-emerald-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap"><i class="fa-solid fa-file-import"></i> Impor Excel</button>
                         <button onclick="exportGuruExcel()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-sky-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap col-span-2 sm:col-span-1"><i class="fa-solid fa-file-export"></i> Ekspor Excel</button>
+                        <button onclick="confirmHapusGuruTerpilih()" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-red-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-trash-can"></i> Hapus
+                        </button>
                         <input type="file" id="excel-guru-file-input" accept=".xlsx, .xls" class="hidden" onchange="prosesImportGuruExcel(this)">
                     </div>
                 </div>
-                <div id="admin-guru-list" class="border border-slate-200 rounded-xl p-2 text-xs divide-y divide-slate-100 bg-white shadow-sm"></div>
+                <div class="border border-slate-200 rounded-xl bg-white shadow-sm">
+                    <div class="flex items-center gap-3 px-5 py-2 text-[10px] font-bold uppercase text-slate-500 bg-slate-50 border-b border-slate-200 rounded-t-xl">
+                        <input type="checkbox" id="select-all-guru" onchange="toggleSelectAllGuru(this)" class="rounded text-primary-600 cursor-pointer" title="Pilih semua guru">
+                        <span>Pilih semua</span>
+                    </div>
+                    <div id="admin-guru-list" class="p-2 text-xs divide-y divide-slate-100"></div>
+                </div>
             </div>
         </div>
 
@@ -1548,6 +1557,9 @@
                         <button onclick="exportMapelExcel()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-sky-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap"><i class="fa-solid fa-file-export"></i> Ekspor Excel</button>
                         <button onclick="acakUbahMapelTerpilih()" class="bg-violet-50 hover:bg-violet-100 text-violet-700 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-violet-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap">
                             <i class="fa-solid fa-shuffle"></i> Acak &amp; Ubah
+                        </button>
+                        <button onclick="confirmHapusMapelTerpilih()" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 sm:py-1 rounded-lg text-xs font-semibold transition border border-red-200 flex items-center gap-1 w-full sm:w-auto justify-center whitespace-nowrap">
+                            <i class="fa-solid fa-trash-can"></i> Hapus
                         </button>
                         <input type="file" id="excel-mapel-file-input" accept=".xlsx, .xls" class="hidden" onchange="prosesImportMapelExcel(this)">
                     </div>
@@ -2031,6 +2043,29 @@
                 </div>
             </div>
 
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4 shadow-sm">
+                <div>
+                    <h3 class="font-bold text-primary-900 text-sm mb-1"><i class="fa-solid fa-right-left text-primary-600 mr-1"></i> Ekspor / Impor Data Antar Platform (Apps Script &harr; Python)</h3>
+                    <p class="text-xs text-slate-600">Memindahkan <b>akun, mapel, soal (pilihan ganda &amp; essay), dan nilai</b> lewat satu file <code>.json</code> yang bisa dipakai di versi Apps Script maupun Python. Pengaturan ujian, token, dan <b>foto profil siswa tidak ikut</b> (foto punya fitur ekspor/impor sendiri di Manajemen &gt; Profil Siswa). File ini berisi <b>password dan kunci jawaban</b>, jadi simpan di tempat aman.</p>
+                </div>
+                <div>
+                    <button onclick="portabelEksporAdmin()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition shadow-md">
+                        <i class="fa-solid fa-file-export mr-1"></i> Ekspor Data (.json)
+                    </button>
+                </div>
+                <div class="border-t border-slate-200 pt-4 space-y-3">
+                    <label class="block text-xs font-bold text-primary-900" for="input-file-impor-portabel">Impor dari file ekspor</label>
+                    <input type="file" id="input-file-impor-portabel" accept=".json,application/json" onchange="portabelPilihFile(this)" class="block w-full text-xs text-slate-700 bg-white border border-slate-300 rounded-lg p-2">
+                    <div id="portabel-ringkasan" class="hidden text-xs text-slate-700 bg-white border border-slate-200 rounded-lg p-3 space-y-2"></div>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
+                        <input type="text" id="input-konfirmasi-impor-portabel" oninput="portabelCekKonfirmasi()" autocomplete="off" class="w-full sm:w-48 px-3 py-2 border border-slate-300 rounded-lg text-xs bg-white text-slate-900 font-bold" placeholder="Ketik IMPOR">
+                        <button id="btn-impor-portabel" onclick="portabelMulaiImpor()" disabled class="bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition shadow-md opacity-40 cursor-not-allowed">
+                            <i class="fa-solid fa-file-import mr-1"></i> Impor &amp; Ganti Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-red-50 p-6 rounded-xl border border-red-200 space-y-4 shadow-sm">
                 <div>
                     <h3 class="font-bold text-red-800 text-sm mb-1"><i class="fa-solid fa-triangle-exclamation text-red-600 mr-1"></i> Hapus Semua Rekap Nilai</h3>
@@ -2063,7 +2098,14 @@
                         </div>
                         <div>
                             <label class="block font-semibold uppercase text-slate-600 mb-1">Password Baru</label>
-                            <input type="text" id="adm-account-pass" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                            <div class="relative">
+                                <input type="password" id="adm-account-pass" autocomplete="new-password" placeholder="Kosongkan jika tidak ingin mengganti" class="w-full pl-3 pr-11 py-2 border border-slate-300 rounded-lg bg-white">
+                                <button type="button" class="field-toggle" data-pwgrp="adm-account-pass" onclick="togglePwKredensial('adm-account-pass','adm-account-pass2')" aria-label="Tampilkan password" title="Tampilkan password"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div id="adm-account-pass2-row">
+                            <label class="block font-semibold uppercase text-slate-600 mb-1">Ulangi Password Baru</label>
+                            <input type="password" id="adm-account-pass2" autocomplete="new-password" placeholder="Ketik ulang password baru" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
                         </div>
                     </div>
                     <div class="pt-2 text-right">
@@ -2086,7 +2128,14 @@
                         </div>
                         <div>
                             <label class="block font-semibold uppercase text-slate-600 mb-1">Password Baru</label>
-                            <input type="text" id="pengawas-sekolah-account-pass" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                            <div class="relative">
+                                <input type="password" id="pengawas-sekolah-account-pass" autocomplete="new-password" class="w-full pl-3 pr-11 py-2 border border-slate-300 rounded-lg bg-white">
+                                <button type="button" class="field-toggle" data-pwgrp="pengawas-sekolah-account-pass" onclick="togglePwKredensial('pengawas-sekolah-account-pass','pengawas-sekolah-account-pass2')" aria-label="Tampilkan password" title="Tampilkan password"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div id="pengawas-sekolah-account-pass2-row">
+                            <label class="block font-semibold uppercase text-slate-600 mb-1">Ulangi Password Baru</label>
+                            <input type="password" id="pengawas-sekolah-account-pass2" autocomplete="new-password" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
                         </div>
                     </div>
                     <div class="pt-2 text-right">
@@ -2109,7 +2158,14 @@
                         </div>
                         <div>
                             <label class="block font-semibold uppercase text-slate-600 mb-1">Password Baru</label>
-                            <input type="text" id="pengawas-ujian-account-pass" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                            <div class="relative">
+                                <input type="password" id="pengawas-ujian-account-pass" autocomplete="new-password" class="w-full pl-3 pr-11 py-2 border border-slate-300 rounded-lg bg-white">
+                                <button type="button" class="field-toggle" data-pwgrp="pengawas-ujian-account-pass" onclick="togglePwKredensial('pengawas-ujian-account-pass','pengawas-ujian-account-pass2')" aria-label="Tampilkan password" title="Tampilkan password"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div id="pengawas-ujian-account-pass2-row">
+                            <label class="block font-semibold uppercase text-slate-600 mb-1">Ulangi Password Baru</label>
+                            <input type="password" id="pengawas-ujian-account-pass2" autocomplete="new-password" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white">
                         </div>
                     </div>
                     <div class="pt-2 text-right">
@@ -2569,7 +2625,8 @@
                 <h3 class="font-bold text-slate-900 text-sm">Pengaturan Profil Guru</h3>
                 <div><label class="block font-semibold mb-1">Nama Lengkap & Gelar</label><input type="text" id="guru-self-nama" class="w-full px-3 py-2 border rounded-lg bg-white"></div>
                 <div><label class="block font-semibold mb-1">Username Login</label><input type="text" id="guru-self-username" class="w-full px-3 py-2 border rounded-lg bg-white"></div>
-                <div><label class="block font-semibold mb-1">Password Baru</label><input type="text" id="guru-self-password" class="w-full px-3 py-2 border rounded-lg bg-white"></div>
+                <div><label class="block font-semibold mb-1">Password Baru</label><div class="relative"><input type="password" id="guru-self-password" autocomplete="new-password" placeholder="Kosongkan jika tidak ingin mengganti" class="w-full pl-3 pr-11 py-2 border rounded-lg bg-white"><button type="button" class="field-toggle" data-pwgrp="guru-self-password" onclick="togglePwKredensial('guru-self-password','guru-self-password2')" aria-label="Tampilkan password" title="Tampilkan password"><i class="fa-solid fa-eye"></i></button></div></div>
+                <div id="guru-self-password2-row"><label class="block font-semibold mb-1">Ulangi Password Baru</label><input type="password" id="guru-self-password2" autocomplete="new-password" placeholder="Ketik ulang password baru" class="w-full px-3 py-2 border rounded-lg bg-white"></div>
                 <button onclick="simpanProfilGuruSelf()" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 rounded-lg transition shadow">Simpan Perubahan Profil</button>
             </div>
         </div>
@@ -5768,6 +5825,8 @@ let mapelDipilih = activeFoundMapelObj;
         let containerGuru = document.getElementById('admin-guru-list');
         let tbodySiswa = document.getElementById('admin-siswa-list-table');
         if (containerGuru) containerGuru.innerHTML = "";
+        let selAllGuru = document.getElementById('select-all-guru');
+        if (selAllGuru) selAllGuru.checked = false;
         if (tbodySiswa) tbodySiswa.innerHTML = "";
 
         let guruList = allAdminUsersData.filter(u => u.role === 'guru');
@@ -5818,6 +5877,7 @@ let mapelDipilih = activeFoundMapelObj;
                     containerGuru.innerHTML += `
                         <div class="py-2.5 px-3 flex flex-wrap gap-2 justify-between items-center hover:bg-slate-50 transition rounded-lg">
                             <div class="flex items-center gap-3">
+                                <input type="checkbox" class="guru-checkbox rounded text-primary-600 cursor-pointer" data-username="${encodeURIComponent(u.username)}">
                                 <span class="font-bold text-slate-900 w-6">${index + 1}.</span>
                                 <div><b>${u.nama}</b> <span class="text-[10px] bg-slate-200 px-2 py-0.5 rounded ml-2 font-bold uppercase text-slate-600">guru</span></div>
                             </div>
@@ -6269,6 +6329,91 @@ let mapelDipilih = activeFoundMapelObj;
                 hideLoading();
             }).hapusUser(username);
         });
+    }
+
+    // ===== Hapus massal GURU dan MAPEL (kotak centang + tombol Hapus, sama seperti tab Siswa) =====
+    // Memakai fungsi server yang sudah ada (hapusUser / hapusMapel) satu per satu, jadi perlindungan
+    // akun inti, penghapusan soal mapel, dan pembersihan cache tetap sama persis dengan hapus satuan.
+    function toggleSelectAllGuru(source) {
+        document.querySelectorAll('.guru-checkbox').forEach(cb => cb.checked = source.checked);
+    }
+
+    function jalankanHapusBerurutan(daftar, hapusSatu, label, sesudah) {
+        let total = daftar.length, i = 0, hasil = [];
+        function lanjut() {
+            if (i >= total) { hideLoading(); sesudah(hasil); return; }
+            let item = daftar[i++];
+            showLoading("Menghapus", "Menghapus " + label + " " + i + " dari " + total + "...");
+            let selesaiSatu = function (ok, pesan) { hasil.push({ item: item, ok: ok, pesan: String(pesan || '') }); lanjut(); };
+            hapusSatu(item,
+                function (msg) { selesaiSatu(/berhasil/i.test(String(msg || '')), msg); },
+                function (err) { selesaiSatu(false, pesanError(err)); });
+        }
+        lanjut();
+    }
+
+    function confirmHapusGuruTerpilih() {
+        let selected = document.querySelectorAll('.guru-checkbox:checked');
+        if (selected.length === 0) {
+            showAlertModal("Tidak Ada Pilihan", "Pilih minimal satu guru untuk dihapus!");
+            return;
+        }
+        let daftar = [];
+        selected.forEach(cb => daftar.push(decodeURIComponent(cb.getAttribute('data-username'))));
+        showConfirmModal("Konfirmasi Hapus Massal", `Yakin ingin menghapus ${daftar.length} guru terpilih secara permanen?`, function() {
+            jalankanHapusBerurutan(daftar, function (username, ok, gagal) {
+                srv.withSuccessHandler(ok).withFailureHandler(gagal).hapusUser(username);
+            }, "guru", function (hasil) {
+                let berhasil = hasil.filter(h => h.ok).length;
+                let gagalList = hasil.filter(h => !h.ok);
+                let teks = berhasil + " guru berhasil dihapus secara permanen.";
+                if (gagalList.length > 0) {
+                    teks += "\n\nTidak dapat dihapus (" + gagalList.length + "):\n" + gagalList.map(h => "- " + h.item + ": " + h.pesan).join("\n");
+                }
+                showAlertModal("Hasil", teks);
+                loadAdminData();
+            });
+        });
+    }
+
+    function confirmHapusMapelTerpilih() {
+        let selected = document.querySelectorAll('.mapel-checkbox:checked');
+        if (selected.length === 0) {
+            showAlertModal("Tidak Ada Pilihan", "Pilih minimal satu mapel untuk dihapus!");
+            return;
+        }
+        let daftar = [];
+        selected.forEach(cb => daftar.push({
+            nama: decodeURIComponent(cb.getAttribute('data-nama')),
+            kelas: decodeURIComponent(cb.getAttribute('data-kelas')),
+            jurusan: decodeURIComponent(cb.getAttribute('data-jurusan'))
+        }));
+        let contoh = daftar.slice(0, 8).map(m => "- " + m.nama + " (Kelas " + m.kelas + " - " + m.jurusan + ")").join("\n") +
+            (daftar.length > 8 ? "\n... dan " + (daftar.length - 8) + " lainnya" : "");
+        showConfirmModal("⚠️ Konfirmasi Hapus Mapel",
+            `Yakin ingin menghapus ${daftar.length} mapel terpilih?\n\n${contoh}\n\nSeluruh soal PILIHAN GANDA dan SOAL ESSAY milik mapel-mapel ini akan ikut terhapus permanen dan tidak bisa dikembalikan.`,
+            function() {
+                jalankanHapusBerurutan(daftar, function (m, ok, gagal) {
+                    srv.withSuccessHandler(ok).withFailureHandler(gagal).hapusMapel(m.nama, m.kelas, m.jurusan);
+                }, "mapel", function (hasil) {
+                    let berhasil = hasil.filter(h => h.ok).length, pg = 0, es = 0;
+                    hasil.forEach(h => {
+                        if (!h.ok) return;
+                        let mm = h.pesan.match(/\((\d+) soal pilihan ganda dan (\d+) soal essay/);
+                        if (mm) { pg += parseInt(mm[1], 10); es += parseInt(mm[2], 10); }
+                    });
+                    let gagalList = hasil.filter(h => !h.ok);
+                    let teks = berhasil + " mata pelajaran berhasil dihapus (" + pg + " soal pilihan ganda dan " + es + " soal essay terkait ikut dihapus).";
+                    if (gagalList.length > 0) {
+                        teks += "\n\nTidak dapat dihapus (" + gagalList.length + "):\n" + gagalList.map(h => "- " + h.item.nama + ": " + h.pesan).join("\n");
+                    }
+                    let sa = document.getElementById('select-all-mapel');
+                    if (sa) sa.checked = false;
+                    showAlertModal("Hasil", teks);
+                    loadAdminMapelList();
+                });
+            }
+        );
     }
 
     function toggleSelectAllSiswa(source) {
@@ -7798,6 +7943,279 @@ let mapelDipilih = activeFoundMapelObj;
             });
     }
 
+    // ================= EKSPOR / IMPOR DATA PORTABEL (Apps Script <-> Python) =================
+    // Satu file .json berisi akun, mapel, soal (PG + essay), dan nilai dengan urutan kolom yang sama
+    // di kedua versi. Impor dikirim bertahap; data saat ini otomatis diunduh dulu sebagai cadangan.
+    const PORTABEL_URUT = ['users', 'mapel', 'soal', 'soal_essay', 'nilai'];
+    const PORTABEL_NAMA = { users: 'Akun', mapel: 'Mapel', soal: 'Soal pilihan ganda', soal_essay: 'Soal essay', nilai: 'Nilai' };
+    const PORTABEL_LEBAR = { users: 9, mapel: 9, soal: 11, soal_essay: 6, nilai: 10 };
+    const PORTABEL_HALAMAN = { users: 1000, mapel: 1000, soal: 60, soal_essay: 100, nilai: 1000 };
+    const PORTABEL_ROLE_INTI = ['admin', 'pengawas_sekolah', 'pengawas_ujian'];
+    let portabelFile = null;     // { data, info, nama }
+    let portabelSibuk = false;
+
+    // esc() milik skrip FAQ bersifat lokal (dibungkus fungsi), jadi tidak bisa dipakai di sini.
+    function portabelEsc(s) {
+        return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function portabelPanggil(namaFn, args, sisa) {
+        sisa = (sisa === undefined) ? 3 : sisa;
+        return new Promise(function (resolve, reject) {
+            let r = srv.withSuccessHandler(resolve).withFailureHandler(reject);
+            r[namaFn].apply(r, args || []);
+        }).catch(function (err) {
+            if (sisa <= 0 || esErrorAuth(err)) throw err;
+            return new Promise(function (ok) { setTimeout(ok, 1500 * (4 - sisa)); })
+                .then(function () { return portabelPanggil(namaFn, args, sisa - 1); });
+        });
+    }
+
+    function portabelTanggalNama() {
+        let d = new Date(), p = function (n) { return String(n).padStart(2, '0'); };
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '_' + p(d.getHours()) + '-' + p(d.getMinutes());
+    }
+
+    function portabelUnduh(obj, namaFile) {
+        let blob = new Blob([JSON.stringify(obj)], { type: 'application/json' });
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = namaFile;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+    }
+
+    async function portabelAmbilSemua() {
+        let info = await portabelPanggil('eksporPortabelInfo', []);
+        let hasil = { format: 'EXAMCBT-PORTABLE', versi: 1, sumber: info.platform, dibuat: new Date().toISOString(), tabel: {} };
+        for (const t of PORTABEL_URUT) {
+            let rows = [], offset = 0, total = (info.jumlah && info.jumlah[t]) || 0;
+            while (true) {
+                Loading.setSub('Membaca ' + PORTABEL_NAMA[t] + ' (' + rows.length + '/' + total + ')');
+                let r = await portabelPanggil('eksporPortabelBagian', [t, offset, PORTABEL_HALAMAN[t]]);
+                (r.rows || []).forEach(function (x) { rows.push(x); });
+                offset = r.offset;
+                if (!r.rows || r.rows.length === 0 || offset >= r.total) break;
+            }
+            hasil.tabel[t] = rows;
+        }
+        return hasil;
+    }
+
+    function portabelRingkasJumlah(tabel) {
+        return PORTABEL_URUT.map(function (t) { return PORTABEL_NAMA[t] + ': ' + (tabel[t] ? tabel[t].length : 0); }).join(' | ');
+    }
+    function portabelRingkasAngka(j) {
+        return PORTABEL_URUT.map(function (t) { return PORTABEL_NAMA[t] + ': ' + ((j && j[t] !== undefined) ? j[t] : 0); }).join(' | ');
+    }
+
+    async function portabelEksporAdmin() {
+        if (portabelSibuk) return;
+        portabelSibuk = true;
+        showLoading('Ekspor Data', 'Menyiapkan data...');
+        try {
+            let data = await portabelAmbilSemua();
+            portabelUnduh(data, 'ExamCBT_Data_' + data.sumber + '_' + portabelTanggalNama() + '.json');
+            hideLoading();
+            showAlertModal('Ekspor Selesai', 'File berhasil dibuat dan diunduh.\n\n' + portabelRingkasJumlah(data.tabel) +
+                '\n\nFile ini berisi password dan kunci jawaban. Simpan di tempat aman.');
+        } catch (e) {
+            hideLoading();
+            showAlertModal('Gagal', 'Ekspor data gagal: ' + pesanError(e));
+        } finally {
+            portabelSibuk = false;
+        }
+    }
+
+    function portabelValidasi(d) {
+        if (!d || d.format !== 'EXAMCBT-PORTABLE') return 'Ini bukan file ekspor data ExamCBT (format tidak dikenali).';
+        if (!(d.versi >= 1)) return 'Versi file tidak valid.';
+        if (d.versi > 1) return 'File ini dibuat oleh versi aplikasi yang lebih baru (format v' + d.versi + '). Perbarui aplikasi ini terlebih dahulu.';
+        if (!d.tabel || typeof d.tabel !== 'object') return 'Isi file tidak lengkap.';
+        for (const t of PORTABEL_URUT) {
+            let rows = d.tabel[t];
+            if (!Array.isArray(rows)) return 'Tabel ' + PORTABEL_NAMA[t] + ' tidak ada di file.';
+            for (let i = 0; i < rows.length; i++) {
+                if (!Array.isArray(rows[i])) return 'Baris ke-' + (i + 1) + ' pada tabel ' + PORTABEL_NAMA[t] + ' rusak.';
+            }
+        }
+        return '';
+    }
+
+    function portabelBarisBersih(t, rows) {
+        let w = PORTABEL_LEBAR[t], out = [];
+        rows.forEach(function (r) {
+            let x = [], kosong = true;
+            for (let i = 0; i < w; i++) {
+                let v = (r[i] === null || r[i] === undefined) ? '' : String(r[i]);
+                if (v.trim() !== '') kosong = false;
+                x.push(v);
+            }
+            if (!kosong) out.push(x);
+        });
+        return out;
+    }
+
+    function portabelPotong(rows, maksBaris, maksKarakter) {
+        let hasil = [], cur = [], ukuran = 0;
+        rows.forEach(function (r) {
+            let u = 0;
+            for (let i = 0; i < r.length; i++) u += r[i].length + 3;
+            if (cur.length && (cur.length >= maksBaris || ukuran + u > maksKarakter)) { hasil.push(cur); cur = []; ukuran = 0; }
+            cur.push(r); ukuran += u;
+        });
+        if (cur.length) hasil.push(cur);
+        return hasil;
+    }
+
+    function portabelRenderRingkasan() {
+        let box = document.getElementById('portabel-ringkasan');
+        if (!box) return;
+        if (!portabelFile) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+        let d = portabelFile.data, info = portabelFile.info || {}, ada = info.jumlah || {};
+        let batas = info.batasSel || 0, besar = 0, inti = 0;
+        let baris = PORTABEL_URUT.map(function (t) {
+            let n = portabelBarisBersih(t, d.tabel[t]).length;
+            let ket = n === 0 ? 'kosong di file, data saat ini TIDAK diubah' : 'akan menggantikan data saat ini';
+            return '<tr><td class="py-1 pr-3 font-semibold">' + portabelEsc(PORTABEL_NAMA[t]) + '</td><td class="py-1 pr-3">' + n +
+                '</td><td class="py-1 pr-3">' + (ada[t] !== undefined ? ada[t] : '-') + '</td><td class="py-1 text-slate-500">' + portabelEsc(ket) + '</td></tr>';
+        }).join('');
+        if (batas > 0) {
+            (d.tabel.soal || []).forEach(function (r) { if (r && r[4] && String(r[4]).length > batas) besar++; });
+            (d.tabel.soal_essay || []).forEach(function (r) { if (r && r[5] && String(r[5]).length > batas) besar++; });
+        }
+        (d.tabel.users || []).forEach(function (r) {
+            if (r && PORTABEL_ROLE_INTI.indexOf(String(r[2] || '').trim().toLowerCase()) !== -1) inti++;
+        });
+        let cat = [];
+        if (inti > 0) cat.push(inti + ' akun admin/pengawas di file <b>dilewati</b>; akun inti di aplikasi ini tidak diubah.');
+        if (besar > 0) cat.push(besar + ' gambar soal melebihi batas Google Sheets (' + batas + ' karakter) dan <b>dikosongkan</b> (soalnya tetap masuk).');
+        cat.push('Foto profil tidak ikut. Akun yang namanya sama tetap memakai foto yang sudah ada.');
+        box.innerHTML =
+            '<div><b>' + portabelEsc(portabelFile.nama) + '</b><br><span class="text-slate-500">Dibuat oleh versi: ' + portabelEsc(d.sumber || '?') +
+            (d.dibuat ? ' | ' + portabelEsc(String(d.dibuat).replace('T', ' ').substring(0, 16)) : '') + '</span></div>' +
+            '<table class="w-full text-left"><thead><tr class="text-slate-500"><th class="pr-3">Data</th><th class="pr-3">Di file</th><th class="pr-3">Saat ini</th><th></th></tr></thead><tbody>' + baris + '</tbody></table>' +
+            '<ul class="list-disc pl-4 space-y-1 text-slate-600">' + cat.map(function (c) { return '<li>' + c + '</li>'; }).join('') + '</ul>';
+        box.classList.remove('hidden');
+    }
+
+    function portabelPilihFile(input) {
+        portabelFile = null;
+        portabelRenderRingkasan();
+        portabelCekKonfirmasi();
+        let f = input.files && input.files[0];
+        if (!f) return;
+        showLoading('Membaca File', f.name);
+        let reader = new FileReader();
+        reader.onerror = function () { hideLoading(); input.value = ''; showAlertModal('Gagal', 'File tidak dapat dibaca.'); };
+        reader.onload = async function () {
+            try {
+                let data = JSON.parse(reader.result);
+                let galat = portabelValidasi(data);
+                if (galat) throw new Error(galat);
+                let info = await portabelPanggil('eksporPortabelInfo', [], 1);
+                portabelFile = { data: data, info: info, nama: f.name };
+                hideLoading();
+                portabelRenderRingkasan();
+                portabelCekKonfirmasi();
+            } catch (e) {
+                hideLoading();
+                input.value = '';
+                showAlertModal('File Tidak Dapat Dipakai', (e instanceof SyntaxError) ? 'Isi file bukan JSON yang valid.' : pesanError(e));
+            }
+        };
+        reader.readAsText(f);
+    }
+
+    function portabelCekKonfirmasi() {
+        let inp = document.getElementById('input-konfirmasi-impor-portabel');
+        let btn = document.getElementById('btn-impor-portabel');
+        if (!inp || !btn) return;
+        let aktif = !!portabelFile && !portabelSibuk && inp.value.trim() === 'IMPOR';
+        btn.disabled = !aktif;
+        btn.classList.toggle('opacity-40', !aktif);
+        btn.classList.toggle('cursor-not-allowed', !aktif);
+    }
+
+    function portabelMulaiImpor() {
+        if (!portabelFile || portabelSibuk) return;
+        let peringatan = (typeof adminLainAktif !== 'undefined' && adminLainAktif) ? '\n\nPERHATIAN: admin lain sedang aktif di aplikasi ini.' : '';
+        showConfirmModal('Impor & Ganti Data',
+            'Akun, mapel, soal, dan nilai di aplikasi ini akan DIGANTI dengan isi file (tabel yang kosong di file tidak diubah).\n\n' +
+            'Data saat ini otomatis diunduh dulu sebagai file cadangan. Akun admin dan pengawas di aplikasi ini tidak diubah.\n\n' +
+            'Pastikan tidak ada ujian yang sedang berjalan. Lanjutkan?' + peringatan,
+            function () { portabelJalankanImpor(); });
+    }
+
+    async function portabelJalankanImpor() {
+        if (!portabelFile || portabelSibuk) return;
+        portabelSibuk = true;
+        portabelCekKonfirmasi();
+        let data = portabelFile.data, platform = (portabelFile.info && portabelFile.info.platform) || '';
+        let tahap = 'cadangan';
+        let lap = { gambarDibuang: 0, dipotong: 0, baru: 0, ubah: 0, lewati: 0 };
+        try {
+            showLoading('Impor Data', 'Mencadangkan data saat ini...');
+            let cadangan = await portabelAmbilSemua();
+            portabelUnduh(cadangan, 'Cadangan_Sebelum_Impor_' + cadangan.sumber + '_' + portabelTanggalNama() + '.json');
+            tahap = 'tulis';
+            await portabelPanggil('imporPortabelMulai', []);
+            let dikirim = [], kept = [];
+            for (const t of PORTABEL_URUT) {
+                let rows = portabelBarisBersih(t, data.tabel[t]);
+                if (t === 'users') rows = rows.filter(function (r) { return r[0].trim() !== ''; });
+                if (rows.length === 0) continue;
+                if (t === 'users') rows.forEach(function (r) { kept.push(r[0].trim().toLowerCase()); });
+                Loading.setSub('Menyiapkan ' + PORTABEL_NAMA[t] + '...');
+                await portabelPanggil('imporPortabelKosongkan', [t]);
+                let paket = portabelPotong(rows, t === 'users' ? 500 : 300, 600000), pos = 0;
+                for (const p of paket) {
+                    Loading.setSub('Menulis ' + PORTABEL_NAMA[t] + ' (' + pos + '/' + rows.length + ')');
+                    let r = await portabelPanggil('imporPortabelTambah', [t, p, pos]);
+                    lap.gambarDibuang += (r && r.gambarDibuang) || 0;
+                    lap.dipotong += (r && r.dipotong) || 0;
+                    if (t === 'users' && r) { lap.baru += r.baru || 0; lap.ubah += r.ubah || 0; lap.lewati += r.lewati || 0; }
+                    pos += p.length;
+                }
+                dikirim.push(t);
+            }
+            if (dikirim.length === 0) throw new Error('File tidak berisi data yang dapat diimpor.');
+            tahap = 'selesai';
+            Loading.setSub('Menyelesaikan...');
+            let res = await portabelPanggil('imporPortabelSelesai', [dikirim, kept]);
+            hideLoading();
+            let rin = res && res.rincian && res.rincian.users;
+            let teks = 'Data berhasil diimpor.\n\nJumlah data sekarang:\n' + portabelRingkasAngka(res.jumlah) +
+                (dikirim.indexOf('users') !== -1 ? '\n\nAkun: ' + (rin && rin.baru !== undefined ? rin.baru : lap.baru) + ' baru, ' +
+                    (rin && rin.ubah !== undefined ? rin.ubah : lap.ubah) + ' diperbarui, ' + (rin && rin.lewati !== undefined ? rin.lewati : lap.lewati) +
+                    ' dilewati (akun inti)' + (rin && rin.dihapus ? ', ' + rin.dihapus + ' akun tidak ada di file dan dihapus' : '') + '.' : '');
+            if (lap.gambarDibuang > 0) teks += '\n' + lap.gambarDibuang + ' gambar soal terlalu besar untuk Google Sheets dan dikosongkan.';
+            if (lap.dipotong > 0) teks += '\n' + lap.dipotong + ' sel teks melebihi batas dan dipotong.';
+            teks += '\n\nFoto profil tidak ikut diimpor. Pulihkan lewat fitur impor foto di Manajemen > Profil Siswa; bila saklar Wajib Foto Profil aktif, siswa tanpa foto tidak bisa memulai ujian.' +
+                '\n\nMuat ulang halaman (F5) agar semua daftar menampilkan data terbaru.';
+            showAlertModal('Impor Selesai', teks);
+            let inp = document.getElementById('input-konfirmasi-impor-portabel');
+            if (inp) inp.value = '';
+        } catch (e) {
+            hideLoading();
+            let akhir;
+            if (tahap === 'cadangan') {
+                akhir = 'Impor dibatalkan sebelum mengubah data apa pun.';
+            } else if (platform === 'python') {
+                akhir = 'Data lama di aplikasi ini tetap utuh (impor Python bersifat atomik).';
+            } else {
+                akhir = 'Sebagian data mungkin sudah terganti. File cadangan sebelum impor sudah terunduh otomatis; impor file cadangan itu untuk memulihkan data semula, lalu coba lagi.';
+            }
+            showAlertModal('Impor Gagal', 'Terjadi kesalahan: ' + pesanError(e) + '\n\n' + akhir);
+        } finally {
+            portabelSibuk = false;
+            portabelCekKonfirmasi();
+        }
+    }
+
     function muatLinkFolderBackupAdmin() {
         srv.withFailureHandler(err => {
             console.warn("Link folder backup gagal dimuat:", pesanError(err));
@@ -8327,6 +8745,37 @@ let mapelDipilih = activeFoundMapelObj;
         }).setJadwalPeriodeUjian(JSON.stringify(jadwal));
     }
 
+    // Password admin yang sedang berlaku (tidak ditampilkan di layar). Dipakai bila
+    // admin hanya mengganti username dan membiarkan kolom password kosong.
+    let passAdminLama = '';
+
+    // Ikon mata: tampilkan / sembunyikan password + ulangi password dalam satu kartu.
+    // Terlihat  : kolom "Ulangi Password" disembunyikan (tidak wajib).
+    // Tersembunyi: kolom "Ulangi Password" muncul dan dikosongkan (wajib diketik ulang).
+    function setPwTampil(idA, idB, show) {
+        let a = document.getElementById(idA), b = document.getElementById(idB);
+        let row = document.getElementById(idB + '-row');
+        if (!a) return;
+        a.type = show ? 'text' : 'password';
+        if (b) { b.type = 'password'; if (!show) b.value = ''; }
+        if (row) row.classList.toggle('hidden', !!show);
+        document.querySelectorAll('[data-pwgrp="' + idA + '"]').forEach(btn => {
+            let ic = btn.querySelector('i');
+            if (ic) ic.className = show ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+            btn.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+            btn.setAttribute('title', show ? 'Sembunyikan password' : 'Tampilkan password');
+        });
+    }
+
+    function togglePwKredensial(idA, idB) {
+        let a = document.getElementById(idA);
+        if (!a) return;
+        setPwTampil(idA, idB, a.type === 'password');
+    }
+
+    // Password pengawas yang sedang berlaku (untuk mendeteksi apakah password diubah).
+    let passAwalPengawas = { pengawas_sekolah: '', pengawas_ujian: '' };
+
     function loadKredensialAdminDanToken() {
         showLoading("Memuat Akun", "Mengambil data kredensial Admin & Pengawas...");
         srv.withSuccessHandler(users => {
@@ -8336,33 +8785,74 @@ let mapelDipilih = activeFoundMapelObj;
             let puAcc = users.find(u => u.role === 'pengawas_ujian');
 
             document.getElementById('adm-account-user').value = adminAcc ? adminAcc.username : '';
-            document.getElementById('adm-account-pass').value = adminAcc ? adminAcc.password : '';
+            // Admin: password tidak ditampilkan; kolom dikosongkan (sama seperti Akun Guru).
+            passAdminLama = adminAcc ? String(adminAcc.password == null ? '' : adminAcc.password) : '';
+            document.getElementById('adm-account-pass').value = '';
+            document.getElementById('adm-account-pass2').value = '';
+            setPwTampil('adm-account-pass', 'adm-account-pass2', false);
             
             document.getElementById('pengawas-sekolah-account-user').value = psAcc ? psAcc.username : '';
             document.getElementById('pengawas-sekolah-account-pass').value = psAcc ? psAcc.password : '';
+            document.getElementById('pengawas-sekolah-account-pass2').value = psAcc ? psAcc.password : '';
+            passAwalPengawas.pengawas_sekolah = psAcc ? String(psAcc.password == null ? '' : psAcc.password) : '';
+            setPwTampil('pengawas-sekolah-account-pass', 'pengawas-sekolah-account-pass2', false);
+            document.getElementById('pengawas-sekolah-account-pass2').value = passAwalPengawas.pengawas_sekolah;
 
             document.getElementById('pengawas-ujian-account-user').value = puAcc ? puAcc.username : '';
             document.getElementById('pengawas-ujian-account-pass').value = puAcc ? puAcc.password : '';
+            document.getElementById('pengawas-ujian-account-pass2').value = puAcc ? puAcc.password : '';
+            passAwalPengawas.pengawas_ujian = puAcc ? String(puAcc.password == null ? '' : puAcc.password) : '';
+            setPwTampil('pengawas-ujian-account-pass', 'pengawas-ujian-account-pass2', false);
+            document.getElementById('pengawas-ujian-account-pass2').value = passAwalPengawas.pengawas_ujian;
         }).getUsers();
     }
 
     function simpanKredensialRole(roleTarget) {
         let usernameBaru = "";
         let passwordBaru = "";
+        let passUlang = "";
+        let idPass = "", idPass2 = "";
 
         if (roleTarget === 'admin') {
             usernameBaru = document.getElementById('adm-account-user').value.trim();
-            passwordBaru = document.getElementById('adm-account-pass').value.trim();
+            idPass = 'adm-account-pass'; idPass2 = 'adm-account-pass2';
         } else if (roleTarget === 'pengawas_sekolah') {
             usernameBaru = document.getElementById('pengawas-sekolah-account-user').value.trim();
-            passwordBaru = document.getElementById('pengawas-sekolah-account-pass').value.trim();
+            idPass = 'pengawas-sekolah-account-pass'; idPass2 = 'pengawas-sekolah-account-pass2';
         } else if (roleTarget === 'pengawas_ujian') {
             usernameBaru = document.getElementById('pengawas-ujian-account-user').value.trim();
-            passwordBaru = document.getElementById('pengawas-ujian-account-pass').value.trim();
+            idPass = 'pengawas-ujian-account-pass'; idPass2 = 'pengawas-ujian-account-pass2';
         }
+        passwordBaru = document.getElementById(idPass).value.trim();
+        passUlang = document.getElementById(idPass2).value.trim();
 
-        if (!usernameBaru || !passwordBaru) {
-            showAlertModal("Peringatan", "Username dan Password tidak boleh kosong!");
+        if (!usernameBaru) {
+            showAlertModal("Peringatan", "Username tidak boleh kosong!");
+            return;
+        }
+        // Password terlihat (ikon mata aktif) = tidak perlu mengulang.
+        // Password tersembunyi = WAJIB diulang dan harus sama (bila password diubah).
+        let passTampak = document.getElementById(idPass).type === 'text';
+        let passBerubah;
+        if (roleTarget === 'admin') {
+            passBerubah = passTampak ? !!passwordBaru : !!(passwordBaru || passUlang);
+        } else {
+            passBerubah = passwordBaru !== (passAwalPengawas[roleTarget] || '');
+        }
+        if (passBerubah && !passTampak) {
+            if (!passwordBaru || !passUlang) {
+                showAlertModal("Peringatan", "Isi Password Baru dan Ulangi Password Baru.");
+                return;
+            }
+            if (passwordBaru !== passUlang) {
+                showAlertModal("Peringatan", "Password Baru dan Ulangi Password tidak sama. Silakan periksa kembali.");
+                return;
+            }
+        }
+        // Admin: kolom kosong = pertahankan password lama (tidak ditampilkan).
+        if (roleTarget === 'admin' && !passwordBaru) passwordBaru = passAdminLama;
+        if (!passwordBaru) {
+            showAlertModal("Peringatan", "Password tidak boleh kosong!");
             return;
         }
 
@@ -8374,6 +8864,16 @@ let mapelDipilih = activeFoundMapelObj;
                 currentUser.username = usernameBaru;
                 currentUser.password = passwordBaru;
                 simpanSesiTersimpan();
+            }
+            if (roleTarget === 'admin') {
+                passAdminLama = passwordBaru;
+                document.getElementById('adm-account-pass').value = '';
+                document.getElementById('adm-account-pass2').value = '';
+                setPwTampil('adm-account-pass', 'adm-account-pass2', false);
+            } else {
+                passAwalPengawas[roleTarget] = passwordBaru;
+                setPwTampil(idPass, idPass2, false);
+                document.getElementById(idPass2).value = passwordBaru;
             }
         }).withFailureHandler(err => {
             hideLoading();
@@ -10312,16 +10812,42 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pgTu
         if (!currentUser) return;
         document.getElementById('guru-self-nama').value = currentUser.nama;
         document.getElementById('guru-self-username').value = currentUser.username;
-        document.getElementById('guru-self-password').value = currentUser.password;
+        // Password tidak lagi ditampilkan; kolom dikosongkan setiap membuka tab Akun Guru.
+        document.getElementById('guru-self-password').value = '';
+        document.getElementById('guru-self-password2').value = '';
+        setPwTampil('guru-self-password', 'guru-self-password2', false);
     }
 
     function simpanProfilGuruSelf() {
         let namaBaru = document.getElementById('guru-self-nama').value.trim();
         let userBaru = document.getElementById('guru-self-username').value.trim();
-        let passBaru = document.getElementById('guru-self-password').value.trim();
+        let passInput = document.getElementById('guru-self-password').value.trim();
+        let passUlang = document.getElementById('guru-self-password2').value.trim();
 
-        if(!namaBaru || !userBaru || !passBaru) {
-            showAlertModal("Peringatan", "Nama, Username, dan Password WAJIB diisi!");
+        if(!namaBaru || !userBaru) {
+            showAlertModal("Peringatan", "Nama dan Username WAJIB diisi!");
+            return;
+        }
+        // Password hanya diganti bila diisi. Jika diisi, WAJIB diulangi dan harus sama.
+        // Password sedang terlihat (ikon mata aktif) = tidak perlu mengulang.
+        // Password tersembunyi = WAJIB diulang dan harus sama.
+        let passTampak = document.getElementById('guru-self-password').type === 'text';
+        if (passTampak) {
+            passUlang = passInput;
+        } else if (passInput || passUlang) {
+            if (!passInput || !passUlang) {
+                showAlertModal("Peringatan", "Untuk mengganti password, isi Password Baru dan Ulangi Password Baru.");
+                return;
+            }
+            if (passInput !== passUlang) {
+                showAlertModal("Peringatan", "Password Baru dan Ulangi Password tidak sama. Silakan periksa kembali.");
+                return;
+            }
+        }
+        // Kosong = pertahankan password lama (tidak ditampilkan di layar).
+        let passBaru = passInput || currentUser.password;
+        if (!passBaru) {
+            showAlertModal("Peringatan", "Password tidak boleh kosong. Isi Password Baru dan ulangi.");
             return;
         }
 
@@ -10336,6 +10862,9 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pgTu
                 currentUser.password = passBaru;
                 simpanSesiTersimpan();
                 document.getElementById('lbl-user-name').innerText = namaBaru;
+                document.getElementById('guru-self-password').value = '';
+                document.getElementById('guru-self-password2').value = '';
+                setPwTampil('guru-self-password', 'guru-self-password2', false);
             } else {
                 showAlertModal("Gagal", res.message);
             }
@@ -10531,7 +11060,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pgTu
             <li><b>Manajemen Guru</b>: tambah, ubah, hapus akun guru dan atur urutan daftar guru.</li>
             <li><b>Manajemen Siswa &amp; Ruang</b>: tambah siswa satuan atau import Excel, atur ruang ujian, acak username/password/token, nonaktifkan atau hapus siswa, dan cetak <b>Kartu Ujian</b>.</li>
             <li><b>Manajemen Mapel</b>: buat mapel, kode mapel, batas kumpul, dan hapus soal per mapel.</li>
-            <li><b>Pengaturan Ujian</b> (dibagi 4 sub tab: Jadwal &amp; Waktu, Aturan Ujian, Akses, Kunci &amp; Panel Guru, serta Data &amp; Sistem): periode aktif, durasi dan jam ujian, waktu per soal, batas pelanggaran, Batas Soal Pilihan Ganda, cache soal, draf jawaban, pilihan Kelas Peserta Ujian, folder backup, Saklar Kunci Soal Mapel (kunci per kelas/jurusan, daftar mapel terkunci, lepas kunci), saklar dan jam backup sheet database (otomatis harian + tombol Backup Sekarang), saklar FAQ Pintar, tab DKN guru, kolom Edit rekap guru, serta tombol Hapus Semua Rekap Nilai.</li>
+            <li><b>Pengaturan Ujian</b> (dibagi 4 sub tab: Jadwal &amp; Waktu, Aturan Ujian, Akses, Kunci &amp; Panel Guru, serta Data &amp; Sistem): periode aktif, durasi dan jam ujian, waktu per soal, batas pelanggaran, Batas Soal Pilihan Ganda, cache soal, draf jawaban, pilihan Kelas Peserta Ujian, folder backup, Saklar Kunci Soal Mapel (kunci per kelas/jurusan, daftar mapel terkunci, lepas kunci), saklar dan jam backup sheet database (otomatis harian + tombol Backup Sekarang), saklar FAQ Pintar, tab DKN guru, kolom Edit rekap guru, kartu Ekspor/Impor Data Antar Platform (pindah data akun, mapel, soal, dan nilai antara versi Apps Script dan Python), serta tombol Hapus Semua Rekap Nilai.</li>
             <li><b>Kredensial Admin &amp; Pengawas</b>: ganti username dan password Admin, Pengawas Sekolah, dan Pengawas Ujian.</li>
             <li><b>Tampilan</b>: tema warna aplikasi.</li>
           </ul>` },
@@ -10867,7 +11396,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pgTu
             <li><b>Pengawas Sekolah</b> (Peninjau Soal): tombol <i>Update Pengawas Sekolah</i></li>
             <li><b>Pengawas Ujian</b> (Live Monitor): tombol <i>Update Pengawas Ujian</i></li>
           </ul>
-          <p>Isi <b>Username Baru</b> dan <b>Password Baru</b>, lalu tekan tombol update pada kartu yang sesuai. Catat kredensial baru dan sampaikan kepada pemegang akunnya.</p>` },
+          <p>Isi <b>Username Baru</b> dan <b>Password Baru</b>, lalu ketik ulang pada <b>Ulangi Password Baru</b> (harus sama), kemudian tekan tombol update pada kartu yang sesuai. Tekan ikon mata untuk melihat password; selama password terlihat, kolom Ulangi Password tidak perlu diisi. Pada kartu Admin, kolom password kosong secara bawaan; kosongkan kedua kolom password bila hanya ingin mengganti username. Catat kredensial baru dan sampaikan kepada pemegang akunnya.</p>` },
 
     { id: 'a28', r: 'admin', c: 'Kredensial', ctx: 'admin:akun-token', q: 'Saya lupa username/password admin. Bagaimana memulihkannya?',
       k: 'lupa password admin pemulihan reset tidak bisa login admin spreadsheet users',
@@ -11048,7 +11577,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pgTu
       k: 'profil ganti password username nama gelar akun guru ubah sandi',
       a: `<ol>
             <li>Buka tab <b>Akun Guru</b>.</li>
-            <li>Ubah <b>Nama Lengkap &amp; Gelar</b>, <b>Username Login</b>, atau <b>Password Baru</b>.</li>
+            <li>Ubah <b>Nama Lengkap &amp; Gelar</b>, <b>Username Login</b>, atau <b>Password Baru</b> (bila password tersembunyi, ketik ulang pada kolom <b>Ulangi Password Baru</b>; bila ikon mata ditekan sehingga password terlihat, tidak perlu mengulang; kosongkan password bila tidak ingin menggantinya).</li>
             <li>Tekan <b>Simpan Perubahan Profil</b>.</li>
           </ol>
           <p>Username baru tidak boleh sama dengan akun lain (admin, pengawas, siswa, atau guru lain).</p>
